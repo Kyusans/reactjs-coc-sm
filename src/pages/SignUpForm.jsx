@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { Button, Container, FloatingLabel, Form } from 'react-bootstrap'
+import { Button, Container, FloatingLabel, Form, Spinner } from 'react-bootstrap'
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
 function SignUpForm({ handleSignUp }) {
@@ -15,13 +15,15 @@ function SignUpForm({ handleSignUp }) {
     setIsLoading(true);
     const loadingToast = toast.loading('Creating your account');
     try {
-      const url = secureLocalStorage.getItem("url");
+      const url = secureLocalStorage.getItem("url") + "user.php";
 
       const jsonData = {
         username: username,
         email: email,
         password: password
       }
+
+      console.log("jsonData: ", JSON.stringify(jsonData));
 
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
@@ -34,38 +36,35 @@ function SignUpForm({ handleSignUp }) {
       if (res.data === -1) {
         toast.error('Account already exists!');
         return;
+      } else if (res.data === -2) {
+        toast.error('Email already exists!');
+        return;
       } else if (res.data === 1) {
         toast.success('Account created successfully!');
         handleSignUp();
       } else {
-        toast.error(res.data);
+        toast.error("Account creation failed!");
+        console.log("res.data: ", JSON.stringify(res.data));
       }
     } catch (error) {
-      toast.error(error);
+      toast.error("Network error!", {
+        description: error.message
+      });
     } finally {
       setIsLoading(false);
     }
-
-    setTimeout(() => {
-      toast.dismiss(loadingToast);
-      toast.success('Account created successfully!');
-    }, 3000)
   };
-  // if (password === confirmPassword) {
-  //   handleSignUp(username, email, password);
-  // } else{
-  //   return;
-  // }
 
 
   const handleValidation = (e) => {
     const form = e.currentTarget;
     e.preventDefault();
     e.stopPropagation();
-
-    if (password !== confirmPassword) {
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters');
+    } else if (password !== confirmPassword) {
       toast.error('Passwords do not match');
-
+      setConfirmPassword('');
     } else if (form.checkValidity()) {
       signup();
     }
@@ -79,7 +78,7 @@ function SignUpForm({ handleSignUp }) {
         <Form noValidate validated={validated} onSubmit={handleValidation}>
           <FloatingLabel label="Username">
             <Form.Control
-              type="email"
+              type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username"
@@ -129,8 +128,12 @@ function SignUpForm({ handleSignUp }) {
             </Form.Control.Feedback>
           </FloatingLabel>
 
-          <Button type='submit' className='w-100 py-2' variant='outline-dark'>
-            <h6 className='font-bold'>Sign up</h6>
+          <Button type='submit' className='w-100 py-2' variant='outline-dark' disabled={isLoading}>
+            {isLoading ?
+              <Spinner animation="border" size="sm" className='mr-2' />
+              :
+              <h6 className='font-bold'>Sign Up</h6>
+            }
           </Button>
         </Form>
 
