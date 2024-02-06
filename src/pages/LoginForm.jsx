@@ -8,7 +8,7 @@ function LoginForm({ handleSignUp }) {
     <div>
       <h1 className='text-3xl font-bold text-center'>Welcome</h1>
 
-      <FloatingLabel className='mt-4' label="Id">
+      <FloatingLabel className='mt-4' label="Username or Email">
         <Form.Control value={userId} onChange={(e) => setUserId(e.target.value)} placeholder='Id' />
       </FloatingLabel>
       <FloatingLabel className='mt-3' label="Password">
@@ -19,7 +19,10 @@ function LoginForm({ handleSignUp }) {
       </div>
 
       <Container className='mt-3 text-center'>
-        <p>Don't have an account?<span className='text-blue-500 cursor-pointer' onClick={handleSignUp}> Sign up</span></p>
+        <p>
+          Don't have an account?{" "}
+          <span className='font-bold cursor-pointer hover:underline transition duration-300 ease-in-out' onClick={ handleSignUp }>Sign up</span>
+        </p>
       </Container>
     </div>
   )
