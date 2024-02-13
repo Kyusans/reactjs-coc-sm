@@ -12,12 +12,14 @@ function App() {
   }
   return (
     <>
-      <Toaster duration={2000} richColors position='top-center'/>
-      <BrowserRouter basename='coc'>
-        <Routes>
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
+      <div className="bg-zinc-900">
+        <Toaster duration={2000} richColors position='top-center'/>
+        <BrowserRouter basename='coc'>
+          <Routes>
+            <Route path="/" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     </>
   );
 }
