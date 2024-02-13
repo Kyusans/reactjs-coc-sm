@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Container, FloatingLabel, Form, Spinner } from 'react-bootstrap'
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
@@ -11,11 +11,15 @@ function LoginForm({ handleSignUp }) {
   const [isLoading, setIsLoading] = useState(false);
   const navigateTo = useNavigate();
 
+  useEffect(() => {
+    secureLocalStorage.removeItem("isLoggedIn");
+  })
+
   const login = async () => {
     setIsLoading(true);
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
-      const jsonData ={ 
+      const jsonData = {
         username: userId,
         password: password
       };
@@ -26,17 +30,19 @@ function LoginForm({ handleSignUp }) {
 
       const res = await axios.post(url, formData);
       console.log("res.data: ", JSON.stringify(res.data));
-      if(res.data !== 0){
+      if (res.data !== 0) {
+        toast.success("Welcome back " + res.data.user_username + "!");
+        secureLocalStorage.setItem("isLoggedIn", "true");
         secureLocalStorage.setItem("userId", JSON.stringify(res.data.user_id));
         secureLocalStorage.setItem("username", JSON.stringify(res.data.user_username));
         secureLocalStorage.setItem("email", JSON.stringify(res.data.user_email));
         secureLocalStorage.setItem("image", JSON.stringify(res.data.user_image));
         secureLocalStorage.setItem("level", JSON.stringify(res.data.user_level));
 
-        if(res.data.user_level < 100){
-          setTimeout(() => {
-            navigateTo("/dashboard");
-          });
+        if (res.data.user_level < 100) {
+          navigateTo("/dashboard");
+        } else {
+          // navigateTo("/admin/dashboard");
         }
 
         // console.log("userId: ", secureLocalStorage.getItem("userId"));
@@ -44,8 +50,8 @@ function LoginForm({ handleSignUp }) {
         // console.log("email: ", secureLocalStorage.getItem("email"));
         // console.log("image: ", secureLocalStorage.getItem("image"));
         // console.log("level: ", secureLocalStorage.getItem("level"));
-        
-      }else{
+
+      } else {
         toast.error("Invalid credentials!");
       }
     } catch (error) {
