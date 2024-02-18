@@ -1,29 +1,53 @@
-import React from 'react'
-import { Container, Nav, Navbar } from 'react-bootstrap'
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { Container, Dropdown, Form, Nav, Navbar } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import secureLocalStorage from 'react-secure-storage';
 
 function MyNavbar() {
+  const navigateTo = useNavigate();
+
+  const handleCreatePost = () => {
+    navigateTo("/submit");
+  };
+
   return (
-    <Navbar className='bg-zinc-900' variant="dark" expand="lg">
-    <Container>
-      <Navbar.Brand href="/">BrandNameMoTo</Navbar.Brand>
-      <Navbar.Toggle aria-controls="reddit-navbar-nav" />
-      <Navbar.Collapse id="reddit-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/popular">Popular</Nav.Link>
-          <Nav.Link href="/all">All</Nav.Link>
-          <Nav.Link href="/subreddits">Subreddits</Nav.Link>
-          {/* Add more Nav.Link components for additional links */}
-        </Nav>
-        <Nav>
-          <Nav.Link href="/login">Login</Nav.Link>
-          <Nav.Link href="/signup">Sign Up</Nav.Link>
-          {/* Add more Nav.Link components for additional links */}
-        </Nav>
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
-  )
+    <>
+      <Navbar className='bg-zinc-900' variant="dark" expand="lg">
+        <Container>
+          <Navbar.Brand href="./dashboard">BrandNameMoTo</Navbar.Brand>
+          <Nav className="mr-auto">
+            <Nav.Link href="./dashboard">Home</Nav.Link>
+          </Nav>
+          <Container className="w-25">
+            <Form.Control
+              type="search"
+              placeholder="Search"
+              className="mr-2"
+              rounded
+            />
+          </Container>
+
+
+          <Nav.Item >
+            <FontAwesomeIcon className='clickable' icon={faPlus} onClick={handleCreatePost} />
+          </Nav.Item>
+
+
+            <Nav.Item className="ml-auto">
+              <Nav.Link>
+                <Dropdown className='text-white'>
+                  <Dropdown.Toggle variant='outline-dark'>
+                    {secureLocalStorage.getItem("username").toString().replace(/"/g, '')}
+                  </Dropdown.Toggle>
+                </Dropdown>
+              </Nav.Link>
+            </Nav.Item>
+        </Container>
+      </Navbar>
+    </>
+  );
 }
 
-export default MyNavbar
+export default MyNavbar;
