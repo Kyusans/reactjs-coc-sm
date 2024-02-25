@@ -8,6 +8,18 @@ import MainLayout from './MainLayout';
 
 
 function App() {
+  // localStorage.removeItem('facCode');
+  // localStorage.removeItem('facultyLoggedIn');
+  // localStorage.removeItem('selectedStatus');
+  // localStorage.removeItem('userId');
+  // localStorage.removeItem('userLevel');
+  // localStorage.removeItem('isLoggedIn');
+  // localStorage.removeItem('adminLoggedIn');
+  // localStorage.removeItem('userCommentId');
+  // localStorage.removeItem('url');
+  // localStorage.removeItem('userFullName');
+  // localStorage.removeItem('personnelLoggedIn');
+  // localStorage.removeItem('theme');
   if(secureLocalStorage.getItem("url") !== "http://localhost/cocsm/api/"){
     secureLocalStorage.setItem("url", "http://localhost/cocsm/api/");
   }
