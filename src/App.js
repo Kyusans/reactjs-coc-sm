@@ -26,7 +26,7 @@ function App() {
   return (
     <>
       <div className="bg-zinc-800 vh-100 text-white">
-        <Toaster duration={2000} richColors position='top-center'/>
+        <Toaster richColors position='top-center'/>
         <BrowserRouter basename='coc'>
           <Routes>
             <Route path="/" element={<Login />} />
