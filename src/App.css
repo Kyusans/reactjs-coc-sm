@@ -40,3 +40,8 @@
 .clickable {
   cursor: pointer;
 }
+
+.custom-offcanvas {
+  background-color: #262727 !important;
+  color: #fff !important;
+}
