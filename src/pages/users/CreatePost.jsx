@@ -126,7 +126,6 @@ function CreatePost({ show, onHide }) {
                   required
                 />
               </Form.Group>
-
               <Form.Group className='mb-3'>
                 <Form.Label>Description (Optional)</Form.Label>
                 <Form.Control
@@ -137,7 +136,6 @@ function CreatePost({ show, onHide }) {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Form.Group>
-
               <Form.Group className='mb-4'>
                 <Form.Label>Image (Optional)</Form.Label>
                 <Form.Control

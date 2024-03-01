@@ -25,7 +25,7 @@ function App() {
   }
   return (
     <>
-      <div className="bg-zinc-800 vh-100 text-white">
+      <div className="text-white">
         <Toaster richColors position='top-center'/>
         <BrowserRouter basename='coc'>
           <Routes>
