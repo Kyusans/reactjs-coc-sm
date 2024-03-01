@@ -1,6 +1,6 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Container } from 'react-bootstrap'
+import React, { useCallback, useEffect, useState } from 'react';
+import { Card, Col, Container, Image, Row } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import UserPost from '../../components/UserPost';
 import { toast } from 'sonner';
@@ -8,17 +8,19 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLocation } from 'react-router-dom';
 
 function UserProfile() {
-  const location = useLocation(); 
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const [userPost, setUserPost] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+
   const getProfile = useCallback(async () => {
     setIsLoading(true);
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
       const userId = location.state.userId;
-      console.log("user id mo to: ", userId);
+
       const jsonData = {
-        userId: userId, 
+        userId: userId,
       };
 
       const formData = new FormData();
@@ -28,7 +30,8 @@ function UserProfile() {
       const res = await axios.post(url, formData);
       console.log("res nako ni : " + JSON.stringify(res.data));
       if (res.data !== 0) {
-        setUserPost(res.data);
+        setUserProfile(res.data[0]);
+        setUserPosts(res.data.slice(1));
       }
 
     } catch (error) {
@@ -37,7 +40,7 @@ function UserProfile() {
     } finally {
       setIsLoading(false);
     }
-  }, [location.state.userId]); 
+  }, [location.state.userId]);
 
   useEffect(() => {
     getProfile();
@@ -45,29 +48,41 @@ function UserProfile() {
 
   return (
     <>
-      <div className='width'></div>
       {isLoading ? <LoadingSpinner /> :
+        <Container className='p-5 flex justify-center'>
+          <Col xs={12} md={8}>
+            {userPosts.map((userPost, index) => (
+              <div key={index} className='mt-3'>
+                <UserPost
+                  username={userPost.user_username}
+                  userImage={userPost.user_image}
+                  title={userPost.post_title}
+                  description={userPost.post_description}
+                  dateTime={userPost.post_dateCreated}
+                  image={userPost.post_image}
+                  status={userPost.post_status}
+                />
+              </div>
+            ))}
+          </Col>
+          <Col xs={12} md={3} className='position-fixed end-0 p-5'>
+            {userProfile && (
+              <Card className='mt-3 bg-black text-white'>
+                <Card.Header>
+                  <Image src={secureLocalStorage.getItem("url") + "images/" + userProfile.user_image} />
+                </Card.Header>
+                <Card.Body>
+                  <h5>{userProfile.user_username}</h5>
+                  <p>{userProfile.user_description}</p>
+                </Card.Body>
+              </Card>
+            )}
+          </Col>
 
-        <Container>
-          <div className='w-full border-[1px] border-[#ffffff]' />
-          {userPost.map((userPosts, index) => (
-            <Container key={index} className='mt-3'>
-              <UserPost
-                username={userPosts.user_username}
-                userImage={userPosts.user_image}
-                title={userPosts.post_title}
-                description={userPosts.post_description}
-                dateTime={userPosts.post_dateCreated}
-                image={userPosts.post_image}
-                status={userPosts.post_status}
-              />
-            </Container>
-          ))}
         </Container>
-
       }
     </>
-  )
+  );
 }
 
 export default UserProfile;

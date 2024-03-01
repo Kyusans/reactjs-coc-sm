@@ -7,7 +7,7 @@ import UserProfile from './pages/users/UserProfile'
 
 function MainLayout() {
   return (
-    <div className='h-screen overflow-hidden'>
+    <div className='h-screen'>
       <MyNavbar />
       <Routes>
         <Route path='/dashboard' element={<Dashboard />} />

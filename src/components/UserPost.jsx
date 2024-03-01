@@ -1,49 +1,46 @@
-import React from 'react'
-import { Card, Col, Container, Image, Row } from 'react-bootstrap'
-import secureLocalStorage from 'react-secure-storage'
+import React from 'react';
+import { Card, Col, Image, Row } from 'react-bootstrap';
+import secureLocalStorage from 'react-secure-storage';
 
 function UserPost({ username, userImage, title, description, dateTime, image, status }) {
   return (
-    <Container className='flex justify-center'>
-      <Col xs={12} md={7}>
-        <Card bg='secondary text-white' >
+    <div className='flex justify-center'>
+      <Col>
+        <Card bg='secondary text-white'>
           <Card.Header>
-            <Row>
-              <Row xs={6} md={4}>
+            <Row className='align-items-center'>
+              <Col xs={3} md={3}>
                 <Image
-                  style={{ width: 75 }}
+                  style={{ width: 40, height: 40 }}
                   src={secureLocalStorage.getItem("url") + "images/" + userImage}
                   roundedCircle
                 />
-                <h5 className='mt-2'>{username}</h5>
+              </Col>
+              <Row>
+                <h6 className='ms-2 text-sm'>{username}</h6>
               </Row>
             </Row>
-            <Row className='flex justify-center'>
-              <Col xs={6} md={4}>
-                <h3 className='text-center'>{title}</h3>
+            <Row className='flex justify-center mt-3'>
+              <Col>
+                <h3 className='text-start'><b>{title}</b></h3>
               </Col>
             </Row>
           </Card.Header>
-          <Card.Body>
-            <Container>
-              {image === "" ? (
-                null
-              ) : (
-                <div className='flex justify-center'>
-                  <Image
-                    className='w-75'
-                    src={secureLocalStorage.getItem("url") + "images/" + image}
-                    rounded
-                  />
-                </div>
-              )}
-            </Container>
-            <p className='text-center mt-3'>{description}</p>
-          </Card.Body>
+          {image !== "" && (
+            <div className='flex justify-center'>
+              <Image
+                className='w-100'
+                src={secureLocalStorage.getItem("url") + "images/" + image}
+                rounded
+              />
+            </div>
+          )}
+          <p className='text-center mt-3'>{description}</p>
+
         </Card>
       </Col>
-    </Container>
-  )
+    </div>
+  );
 }
 
-export default UserPost
+export default UserPost;
