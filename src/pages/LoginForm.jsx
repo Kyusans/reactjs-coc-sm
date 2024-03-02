@@ -39,10 +39,11 @@ function LoginForm({ handleSignUp }) {
         secureLocalStorage.setItem("image", JSON.stringify(res.data.user_image));
         secureLocalStorage.setItem("level", JSON.stringify(res.data.user_level));
 
-        if (res.data.user_level < 100) {
-          navigateTo("/dashboard");
+        if (res.data.user_level === 100) {
+          secureLocalStorage.setItem("isAdminLoggedIn", "true");
+          navigateTo("/admin/dashboard");
         } else {
-          // navigateTo("/admin/dashboard");
+          navigateTo("/dashboard");
         }
 
         // console.log("userId: ", secureLocalStorage.getItem("userId"));

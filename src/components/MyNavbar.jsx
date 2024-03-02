@@ -16,7 +16,9 @@ function MyNavbar() {
   const [userFullName, setUserFullName] = useState(secureLocalStorage.getItem("username"));
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const openCreatePost = () => { setShowCreatePostModal(true); }
-  const hideCreatePost = () => { setShowCreatePostModal(false); }
+  const hideCreatePost = () => {
+    setShowCreatePostModal(false);
+  }
 
 
   useEffect(() => {
@@ -36,12 +38,12 @@ function MyNavbar() {
   const openMyProfile = () => {
     handleToggleOffcanvas();
     console.log("idmoto", secureLocalStorage.getItem("userId"));
-    navigateTo(`/user`, {state: {userId: secureLocalStorage.getItem("userId")}});
+    navigateTo(`/user`, { state: { userId: secureLocalStorage.getItem("userId") } });
   }
 
   return (
     <>
-      <Navbar className="navbar-dark bg-zinc-900 text-white">
+      <Navbar className="navbar-dark bg-zinc-950 text-white">
         <Container fluid>
           <Button variant="outline-light" onClick={handleToggleOffcanvas}>
             <FontAwesomeIcon icon={faBars} size='lg' />
@@ -99,11 +101,11 @@ function MyNavbar() {
 export default MyNavbar;
 
 export function handleSignout() {
-  secureLocalStorage.setItem("username", "");
-  secureLocalStorage.setItem("url", "");
-  secureLocalStorage.setItem("image", "");
-  secureLocalStorage.setItem("email", "");
-  secureLocalStorage.setItem("userId", "");
-  secureLocalStorage.setItem("isLoggedIn", "");
-  secureLocalStorage.setItem("level", "");
+  secureLocalStorage.removeItem("username", "");
+  secureLocalStorage.removeItem("image", "");
+  secureLocalStorage.removeItem("email", "");
+  secureLocalStorage.removeItem("userId", "");
+  secureLocalStorage.removeItem("isLoggedIn", "");
+  secureLocalStorage.removeItem("level", "");
+  secureLocalStorage.removeItem("isAdminLoggedIn", "");
 }
