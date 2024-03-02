@@ -73,7 +73,9 @@ function CreatePost({ show, onHide }) {
           autoClose: 3000,
           description: 'Wait for admin to approve your post',
         });
-        handleOnHide();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
         toast.error("Something went wrong!");
         console.log("res: ", res.data);
