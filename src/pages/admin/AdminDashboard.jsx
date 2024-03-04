@@ -36,16 +36,42 @@ function AdminDashboard() {
     setIsLoading(true);
     try {
       const url = secureLocalStorage.getItem("url") + "admin.php";
-      const jsonData = {"postId" : postId};
+      const jsonData = { "postId": postId };
       const formData = new FormData();
       formData.append("operation", "approvePost");
       formData.append("json", JSON.stringify(jsonData));
       const res = await axios.post(url, formData);
-      if(res.data === 1){
+      if (res.data === 1) {
         toast.success("Post approved!");
         getPendingPost();
       }
-    }catch(error){
+    } catch (error) {
+      toast.error("Network error!");
+      console.log("error: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const rejectPost = async (postId) => {
+    setIsLoading(true);
+    try {
+      const url = secureLocalStorage.getItem("url") + "admin.php";
+      const jsonData = { "postId": postId };
+      const formData = new FormData();
+      formData.append("operation", "rejectPost");
+      formData.append("json", JSON.stringify(jsonData));
+      const res = await axios.post(url, formData);
+      console.log("res.data: ", JSON.stringify(res.data));
+
+      if (res.data === 1) {
+        toast.success("Post rejected!");
+        getPendingPost();
+      } else {
+        toast.error("Something went wrong!");
+        console.log("res.data: ", JSON.stringify(res.data));
+      }
+    } catch (error) {
       toast.error("Network error!");
       console.log("error: ", error);
     } finally {
@@ -84,7 +110,7 @@ function AdminDashboard() {
                         </Col>
                         <Col xs='auto' className='d-flex flex-column align-items-center'>
                           <Button variant='outline-success' className='mt-2' onClick={() => approvePost(post.post_id)} >Approve</Button>
-                          <Button variant='outline-danger' className='mt-2'>Deny</Button>
+                          <Button variant='outline-danger' className='mt-2' onClick={() => rejectPost(post.post_id)}>Reject</Button>
                         </Col>
                       </Row>
                       <Row className='flex justify-center mt-3'>
