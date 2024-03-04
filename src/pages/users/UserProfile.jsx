@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Col, Container, Image } from 'react-bootstrap';
+import { Col, Container, Image } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import UserPost from '../../components/UserPost';
 import { toast } from 'sonner';
@@ -83,7 +83,7 @@ function UserProfile() {
           {isLoading ? <LoadingSpinner /> :
             <Container className='p-5 flex justify-center'>
               <Col xs={12} md={7}>
-                {userProfile === null && <div className='text-center'><b>No post yet</b></div>}
+                {userProfile === null && <div className='text-center'><b>No approved post yet</b></div>}
                 {userProfile && userProfile.map((userPost, index) => (
                   <div key={index} className='mt-3'>
                     <UserPost

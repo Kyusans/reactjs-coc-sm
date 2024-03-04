@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faBars, faHome, faPlus, faSearch, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faBars, faClock, faHome, faPlus, faSearch, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import secureLocalStorage from 'react-secure-storage';
 import CreatePost from '../pages/users/CreatePost';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 function MyNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [userFullName, setUserFullName] = useState(secureLocalStorage.getItem("username"));
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const openCreatePost = () => { setShowCreatePostModal(true); }
   const hideCreatePost = () => {
@@ -41,6 +42,12 @@ function MyNavbar() {
     navigateTo(`/user`, { state: { userId: secureLocalStorage.getItem("userId") } });
   }
 
+  useEffect(() => {
+    if (secureLocalStorage.getItem("isAdminLoggedIn") === "true") {
+      setIsAdminLoggedIn(true);
+    }
+  }, [])
+
   return (
     <>
       <Navbar className="navbar-dark bg-zinc-950 text-white">
@@ -65,15 +72,21 @@ function MyNavbar() {
             </Offcanvas.Header>
             <Offcanvas.Body className='mt-4 flex flex-col justify-between'>
               <Nav >
-                <Nav.Link onClick={openMyProfile}>
-                  <FontAwesomeIcon icon={faUser} className="mr-2" />
-                  View Profile
-                </Nav.Link>
                 <Nav.Link href="/coc/dashboard">
                   <FontAwesomeIcon icon={faHome} className="mr-2" />
                   Home
                 </Nav.Link>
+                <Nav.Link onClick={openMyProfile}>
+                  <FontAwesomeIcon icon={faUser} className="mr-2" />
+                  View Profile
+                </Nav.Link>
                 <hr className='bg-secondary w-100' />
+                {isAdminLoggedIn &&
+                  <Nav.Link href='/coc/admin/dashboard'>
+                    <FontAwesomeIcon icon={faClock} className="mr-2" />
+                    Pending Post
+                  </Nav.Link>
+                }
                 <Nav.Link onClick={openCreatePost}>
                   <FontAwesomeIcon className='clickable mr-2' icon={faPlus} />
                   Create Post

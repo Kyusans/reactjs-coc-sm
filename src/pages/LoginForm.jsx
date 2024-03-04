@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Container, FloatingLabel, Form, Spinner } from 'react-bootstrap'
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
@@ -10,11 +10,6 @@ function LoginForm({ handleSignUp }) {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigateTo = useNavigate();
-
-  useEffect(() => {
-    secureLocalStorage.removeItem("isLoggedIn");
-  })
-
   const login = async () => {
     setIsLoading(true);
     try {
@@ -31,7 +26,7 @@ function LoginForm({ handleSignUp }) {
       const res = await axios.post(url, formData);
       console.log("res.data: ", JSON.stringify(res.data));
       if (res.data !== 0) {
-        toast.success("Welcome back " + res.data.user_username + "!");
+        toast.success("Welcome back " + res.data.user_username + "!", { duration: 1200 });
         secureLocalStorage.setItem("isLoggedIn", "true");
         secureLocalStorage.setItem("userId", JSON.stringify(res.data.user_id));
         secureLocalStorage.setItem("username", JSON.stringify(res.data.user_username));
