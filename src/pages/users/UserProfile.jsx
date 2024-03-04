@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Col, Container, Image } from 'react-bootstrap';
+import { Col, Container, Image } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import UserPost from '../../components/UserPost';
 import { toast } from 'sonner';

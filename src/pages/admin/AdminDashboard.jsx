@@ -32,6 +32,27 @@ function AdminDashboard() {
     }
   }
 
+  const approvePost = async (postId) => {
+    setIsLoading(true);
+    try {
+      const url = secureLocalStorage.getItem("url") + "admin.php";
+      const jsonData = {"postId" : postId};
+      const formData = new FormData();
+      formData.append("operation", "approvePost");
+      formData.append("json", JSON.stringify(jsonData));
+      const res = await axios.post(url, formData);
+      if(res.data === 1){
+        toast.success("Post approved!");
+        getPendingPost();
+      }
+    }catch(error){
+      toast.error("Network error!");
+      console.log("error: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (secureLocalStorage.getItem("isAdminLoggedIn") === "true") {
       getPendingPost();
@@ -41,7 +62,7 @@ function AdminDashboard() {
   }, [navigateTo]);
 
   return (
-    <div className='vh-screen bg-zinc-900 '>
+    <div>
       {isLoading ? <LoadingSpinner /> :
         <div className='flex justify-center'>
           <div className='w-98 md:w-50'>
@@ -62,7 +83,7 @@ function AdminDashboard() {
                           <h5 className='text-sm'>{post.user_username}</h5>
                         </Col>
                         <Col xs='auto' className='d-flex flex-column align-items-center'>
-                          <Button variant='outline-success' >Approve</Button>
+                          <Button variant='outline-success' className='mt-2' onClick={() => approvePost(post.post_id)} >Approve</Button>
                           <Button variant='outline-danger' className='mt-2'>Deny</Button>
                         </Col>
                       </Row>
