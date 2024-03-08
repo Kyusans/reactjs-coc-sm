@@ -56,15 +56,15 @@ function UserProfile() {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getUserDetails");
       const res = await axios.post(url, formData);
-      if(res.data !== 0){
+      if (res.data !== 0) {
         setUserDetails(res.data);
       }
-    }catch{
+    } catch {
       toast.error("Network error");
-    } finally{
+    } finally {
       setIsLoading(false);
     }
-  },[location.state.userId]);
+  }, [location.state.userId]);
 
 
   useEffect(() => {
@@ -74,32 +74,29 @@ function UserProfile() {
 
   return (
     <div className='bg-zinc-900 text-white w-full'>
-        <Col className='text-center'>
-          <Container className='flex justify-center'>
-            <Image className='mt-3' style={{ maxWidth: 100, maxHeight: 100 }} src={secureLocalStorage.getItem("url") + "images/" + userDetails.user_image} rounded />
-          </Container>
-          <h5>{userDetails.user_username}</h5>
-        </Col>
-          {isLoading ? <LoadingSpinner /> :
-            <Container className='p-5 flex justify-center'>
-              <Col xs={12} md={7}>
-                {userProfile === null && <div className='text-center'><b>No approved post yet</b></div>}
-                {userProfile && userProfile.map((userPost, index) => (
-                  <div key={index} className='mt-3'>
-                    <UserPost
-                      username={userPost.user_username}
-                      userImage={userPost.user_image}
-                      title={userPost.post_title}
-                      description={userPost.post_description}
-                      dateTime={userPost.post_dateCreated}
-                      image={userPost.post_image}
-                      status={userPost.post_status}
-                    />
-                  </div>
-                ))}
-              </Col>
-            </Container>
-          }
+      <Col className='text-center'>
+        <Container className='flex justify-center'>
+          <Image
+            className='mt-3'
+            style={{ maxWidth: 100, maxHeight: 100 }}
+            src={secureLocalStorage.getItem("url") + "images/" + userDetails.user_image}
+            rounded
+          />
+        </Container>
+        <h5>{userDetails.user_username}</h5>
+      </Col>
+      {isLoading ? <LoadingSpinner /> :
+        <Container className='p-5 flex justify-center'>
+          <Col xs={12} md={7}>
+            {userProfile === null && <div className='text-center'><b>No approved post yet</b></div>}
+            {userProfile && userProfile.map((userPost, index) => (
+              <div key={index} className='mt-3'>
+                <UserPost userPost={userPost} />
+              </div>
+            ))}
+          </Col>
+        </Container>
+      }
 
 
     </div>

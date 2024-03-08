@@ -1,50 +1,123 @@
-import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faHeartBroken } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card, Col, Container, Image, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
+import { toast } from 'sonner';
 
-function UserPost({ username, userImage, title, description, dateTime, image, status }) {
+function UserPost({ userPost }) {
+  const [postPoints, setPostpoints] = useState(userPost.likes);
+  const [isUserLiked, setIsUserLiked] = useState(false);
+  const navigateTo = useNavigate();
+
+  const handleHeartPost = async (postId, userId) => {
+    try {
+      const url = secureLocalStorage.getItem("url") + "user.php";
+      const jsonData = {
+        postId: postId,
+        userId: userId
+      }
+
+      const formData = new FormData();
+      formData.append("operation", "heartPost");
+      formData.append("json", JSON.stringify(jsonData));
+      const res = await axios.post(url, formData);
+
+      if (res.data === 5) {
+        setPostpoints(postPoints - 1);
+      } else if (res.data === 1) {
+        setPostpoints(postPoints + 1);
+      } else {
+        toast.error("Something wrong");
+        console.log("error: ", res.data);
+      }
+      setIsUserLiked(!isUserLiked);
+    } catch (error) {
+      alert("Network Error");
+      console.log(error);
+    }
+  }
+
+  const isUserLike = useCallback(async () => {
+    try {
+      const url = secureLocalStorage.getItem("url") + "user.php";
+      const jsonData = {
+        postId: userPost.post_id,
+        userId: userPost.post_userId
+      }
+
+      const formData = new FormData();
+      formData.append("operation", "isUserLiked");
+      formData.append("json", JSON.stringify(jsonData));
+
+      const res = await axios.post(url, formData);
+      console.log("res.data ko to", res.data);
+      setIsUserLiked(res.data === 1 ? true : false);
+    } catch (error) {
+      alert("Network error")
+      console.log(error);
+    }
+  }, [userPost.post_id, userPost.post_userId])
+
+  function alertMoTo() {
+    navigateTo("/user", { state: { userId: userPost.post_userId } })
+  }
+
+  useEffect(() => {
+    setPostpoints(userPost.likes);
+    isUserLike();
+  }, [isUserLike, userPost.likes])
+
+
   return (
     <div className='flex justify-center'>
-      <Card className='text-white bg-dark'>
+      <Card className='text-white bg-dark w-full'>
         <Container className='bg-zinc-800 p-3'>
           <Row className='align-items-center mb-2'>
             <Col xs='auto'>
               <Image
                 style={{ maxWidth: 50, maxHeight: 50 }}
-                src={secureLocalStorage.getItem("url") + "images/" + userImage}
+                src={secureLocalStorage.getItem("url") + "images/" + userPost.user_image}
                 roundedCircle
               />
             </Col>
             <Col>
-              <h5 className='text-sm'>{username}</h5>
+              <h5 onClick={() => alertMoTo()} className='text-sm clickable'>{userPost.user_username}</h5>
             </Col>
             <Col xs='auto' className='d-flex flex-column align-items-center'>
-              <FontAwesomeIcon className='clickable' icon={faArrowUp} onClick={() => {alert("Upvote mo to")}} />
-              <p className='m-0'>{status}</p>
-              <FontAwesomeIcon className='clickable' icon={faArrowDown} onClick={() => {alert("Downvote mo to")}}/>
+              <h6 className='w-50'>{postPoints}</h6>
+              {isUserLiked ? (
+                <FontAwesomeIcon icon={faHeart}
+                  onClick={() => handleHeartPost(userPost.post_id, userPost.post_userId)}
+                />
+              ) : (
+                <FontAwesomeIcon icon={faHeartBroken}
+                  onClick={() => handleHeartPost(userPost.post_id, userPost.post_userId)}
+                />)
+              }
             </Col>
           </Row>
 
           <Row className='flex justify-center mt-3'>
             <Col>
-              <h5><b>{title}</b></h5>
+              <h5><b>{userPost.post_title}</b></h5>
             </Col>
           </Row>
 
-          {image !== "" && (
+          {userPost.post_image !== "" && (
             <div className='flex justify-center'>
               <Image
-                style={{ maxWidth: 500, maxHeight: 500, minHeight: 100, minWidth: 550 }}
+                style={{ maxWidth: 500, maxHeight: 500, minHeight: 100, minWidth: 200 }}
                 className='w-100'
-                src={secureLocalStorage.getItem("url") + "images/" + image}
+                src={secureLocalStorage.getItem("url") + "images/" + userPost.post_image}
                 rounded
               />
             </div>
           )}
 
-          <p className='mt-3'>{description}</p>
+          <p className='mt-3'>{userPost.post_description}</p>
         </Container>
       </Card>
     </div>
