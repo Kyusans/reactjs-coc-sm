@@ -56,7 +56,7 @@ function MyNavbar() {
             <FontAwesomeIcon icon={faBars} size='lg' />
           </Button>
           <Navbar.Brand href="/coc/dashboard">
-            Social media mo to
+            <b>Meet Ta</b>
           </Navbar.Brand>
           <Offcanvas
             show={showOffcanvas}

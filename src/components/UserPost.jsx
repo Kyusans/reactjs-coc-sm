@@ -1,4 +1,4 @@
-import { faHeart, faHeartBroken } from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -73,8 +73,8 @@ function UserPost({ userPost }) {
 
   return (
     <div className='flex justify-center'>
-      <Card className='text-white bg-dark w-full'>
-        <Container className='bg-zinc-800 p-3'>
+      <Card className='text-white w-full bg-black p-1' rounded>
+        <Container className='p-3 bg-zinc-950'>
           <Row className='align-items-center mb-2'>
             <Col xs='auto'>
               <Image
@@ -88,15 +88,9 @@ function UserPost({ userPost }) {
             </Col>
             <Col xs='auto' className='d-flex flex-column align-items-center'>
               <h6 className='w-50'>{postPoints}</h6>
-              {isUserLiked ? (
-                <FontAwesomeIcon icon={faHeart}
-                  onClick={() => handleHeartPost(userPost.post_id, userPost.post_userId)}
-                />
-              ) : (
-                <FontAwesomeIcon icon={faHeartBroken}
-                  onClick={() => handleHeartPost(userPost.post_id, userPost.post_userId)}
-                />)
-              }
+              <FontAwesomeIcon icon={faHeart} size='lg' className={`clickable ${isUserLiked ? "text-red-500" : ""}`}
+                onClick={() => handleHeartPost(userPost.post_id, userPost.post_userId)}
+              />
             </Col>
           </Row>
 

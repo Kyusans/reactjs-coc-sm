@@ -73,7 +73,7 @@ function UserProfile() {
   }, [getProfile, getUserDetails, navigateTo]);
 
   return (
-    <div className='bg-zinc-900 text-white w-full'>
+    <div className='bg-zinc-900 text-white w-full vh-100'>
       <Col className='text-center'>
         <Container className='flex justify-center'>
           <Image
