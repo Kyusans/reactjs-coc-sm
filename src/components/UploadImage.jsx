@@ -4,7 +4,7 @@ import { Button, Container, Form, Spinner } from 'react-bootstrap'
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
 
-function UploadImage() {
+function UploadImage({ onHide }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [validated, setValidated] = useState(false);
@@ -46,6 +46,7 @@ function UploadImage() {
         case 1:
           toast.success("success", "Success!");
           setTimeout(() => {
+            onHide();
           }, 1000);
           break;
         case 2:
@@ -91,7 +92,9 @@ function UploadImage() {
           This field is required
         </Form.Control.Feedback>
         <Container className='mt-3'>
-          <Button type='submit' variant='outline-success' disabled={isLoading}>{isLoading && <Spinner animation="border" size="sm" />} Upload image</Button>
+          <Button type='submit' variant='outline-success' disabled={isLoading}>{isLoading && <Spinner animation="border" size="sm" />}
+            Submit
+          </Button>
         </Container>
         <Container
           className='mt-3 w-75 border-[1px] border-[#000000] d-flex justify-content-center align-items-center'

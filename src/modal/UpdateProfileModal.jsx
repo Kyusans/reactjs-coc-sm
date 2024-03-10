@@ -35,7 +35,7 @@ function UpdateProfileModal({ show, onHide, userId }) {
                   <FontAwesomeIcon icon={faArrowLeft} />
                 </Button>
               </Container>
-              <UploadImage />
+              <UploadImage onHide={handleOnHide} />
             </> :
             <>
               <Container className='text-start'>
@@ -43,7 +43,7 @@ function UpdateProfileModal({ show, onHide, userId }) {
                   <FontAwesomeIcon icon={faArrowLeft} />
                 </Button>
               </Container>
-              <TakePicture />
+              <TakePicture onHide={handleOnHide} />
             </>
         }
       </Modal.Body>

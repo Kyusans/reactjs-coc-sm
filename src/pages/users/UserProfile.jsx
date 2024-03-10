@@ -16,7 +16,11 @@ function UserProfile() {
   const [userDetails, setUserDetails] = useState([]);
   const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
   const openUpdateProfileModal = () => { setShowUpdateProfileModal(true); }
-  const hideUpdatProfileeModal = () => { setShowUpdateProfileModal(false); }
+  const hideUpdatProfileeModal = async () => {
+    await getProfile();
+    await getUserDetails(); 
+    setShowUpdateProfileModal(false); 
+  }
 
   const getProfile = useCallback(async () => {
     setIsLoading(true);

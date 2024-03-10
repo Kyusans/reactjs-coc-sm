@@ -7,7 +7,7 @@ import secureLocalStorage from 'react-secure-storage';
 import Webcam from 'react-webcam';
 import { toast } from 'sonner';
 
-function TakePicture() {
+function TakePicture({ onHide }) {
   // const [commentText, setCommentText] = useState("");
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -86,7 +86,7 @@ function TakePicture() {
   };
 
   const handleOnHide = () => {
-    // setCommentText("");
+    onHide();
     setCapturedImage(null);
   }
 
