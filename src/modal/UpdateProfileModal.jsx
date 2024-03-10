@@ -3,6 +3,7 @@ import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
 import TakePicture from '../components/TakePicture';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import UploadImage from '../components/UploadImage';
 
 function UpdateProfileModal({ show, onHide, userId }) {
   const [isTakePicture, setIsTakePicture] = useState(0); // 0 wala, 1 upload image, else take a picture
@@ -29,7 +30,12 @@ function UpdateProfileModal({ show, onHide, userId }) {
             </Col>
           </> : isTakePicture === 1 ?
             <>
-              <p>upload mo to</p>
+              <Container className='text-start'>
+                <Button variant='outline-danger' onClick={() => setIsTakePicture(0)}>
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </Button>
+              </Container>
+              <UploadImage />
             </> :
             <>
               <Container className='text-start'>
