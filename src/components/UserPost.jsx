@@ -6,15 +6,17 @@ import { Card, Col, Container, Image, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
+import { formatDate } from './FormatDate';
 
 function UserPost({ userPost }) {
   const [postPoints, setPostpoints] = useState(userPost.likes);
   const [isUserLiked, setIsUserLiked] = useState(false);
   const navigateTo = useNavigate();
 
-  const handleHeartPost = async (postId, userId) => {
+  const handleHeartPost = async (postId) => {
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
+      const userId = secureLocalStorage.getItem("userId");
       const jsonData = {
         postId: postId,
         userId: userId
@@ -43,9 +45,10 @@ function UserPost({ userPost }) {
   const isUserLike = useCallback(async () => {
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
+      const userId = secureLocalStorage.getItem("userId");
       const jsonData = {
         postId: userPost.post_id,
-        userId: userPost.post_userId
+        userId: userId
       }
 
       const formData = new FormData();
@@ -59,16 +62,17 @@ function UserPost({ userPost }) {
       alert("Network error")
       console.log(error);
     }
-  }, [userPost.post_id, userPost.post_userId])
+  }, [userPost.post_id])
 
   function alertMoTo() {
     navigateTo("/user", { state: { userId: userPost.post_userId } })
   }
 
   useEffect(() => {
+    console.log("post mo to", userPost);
     setPostpoints(userPost.likes);
     isUserLike();
-  }, [isUserLike, userPost.likes])
+  }, [isUserLike, userPost, userPost.likes])
 
 
   return (
@@ -103,15 +107,22 @@ function UserPost({ userPost }) {
           {userPost.post_image !== "" && (
             <div className='flex justify-center'>
               <Image
-                style={{ maxWidth: 500, maxHeight: 500, minHeight: 100, minWidth: 200 }}
+                style={{ maxWidth: 700, maxHeight: 500, minHeight: 100, minWidth: 200 }}
                 className='w-100'
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.post_image}
                 rounded
               />
             </div>
           )}
-
           <p className='mt-3'>{userPost.post_description}</p>
+          <Row className='text-secondary'>
+            <Col>
+              <p>Delete</p>
+            </Col>
+            <Col>
+              <p className='text-end'>{formatDate(userPost.post_dateCreated)}</p>
+            </Col>
+          </Row>
         </Container>
       </Card>
     </div>
