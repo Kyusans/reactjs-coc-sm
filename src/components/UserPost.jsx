@@ -2,7 +2,7 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Col, Container, Image, Row } from 'react-bootstrap';
+import { Card, Col, Image, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
@@ -88,7 +88,7 @@ function UserPost({ userPost }) {
           <Row className='align-items-center mb-2'>
             <Col xs='auto'>
               <Image
-                style={{ maxWidth: 50, maxHeight: 50 }}
+                style={{ maxWidth: 55, maxHeight: 100 }}
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.user_image}
                 roundedCircle
               />

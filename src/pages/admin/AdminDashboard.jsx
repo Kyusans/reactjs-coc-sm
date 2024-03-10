@@ -96,13 +96,13 @@ function AdminDashboard() {
               <Container>
                 {pendingPost.map((post, index) => (
                   <Card key={index} className='text-white bg-dark mt-3'>
-                    <Container className='bg-zinc-800 p-3'>
+                    <Container className='bg-zinc-900 p-3'>
                       <Row className='mb-2'>
                         <Col xs='auto'>
                           <Image
                             style={{ maxWidth: 50, maxHeight: 50 }}
                             src={secureLocalStorage.getItem("url") + "images/" + post.user_image}
-                            roundedCircle
+                            rounded
                           />
                         </Col>
                         <Col>
