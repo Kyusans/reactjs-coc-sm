@@ -7,11 +7,17 @@ import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
 import { formatDate } from './FormatDate';
+import DeletePostModal from '../modal/DeletePostModal';
 
 function UserPost({ userPost }) {
   const [postPoints, setPostpoints] = useState(userPost.likes);
   const [isUserLiked, setIsUserLiked] = useState(false);
+  const [isUserPost, setIsUserPost] = useState(false);
   const navigateTo = useNavigate();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const openDeleteModal = () => { setShowDeleteModal(true); }
+  const hideDeleteModal = () => { setShowDeleteModal(false); }
 
   const handleHeartPost = async (postId) => {
     try {
@@ -57,7 +63,7 @@ function UserPost({ userPost }) {
 
       const res = await axios.post(url, formData);
       console.log("res.data ko to", res.data);
-      setIsUserLiked(res.data === 1 ? true : false);
+      setIsUserLiked(res.data === 1);
     } catch (error) {
       alert("Network error")
       console.log(error);
@@ -72,13 +78,13 @@ function UserPost({ userPost }) {
     console.log("post mo to", userPost);
     setPostpoints(userPost.likes);
     isUserLike();
+    setIsUserPost(userPost.post_userId === secureLocalStorage.getItem("userId"));
   }, [isUserLike, userPost, userPost.likes])
-
 
   return (
     <div className='flex justify-center'>
       <Card className='text-white w-full bg-black p-1' rounded>
-        <Container className='p-3 bg-zinc-950'>
+        <div className='p-3 bg-zinc-950'>
           <Row className='align-items-center mb-2'>
             <Col xs='auto'>
               <Image
@@ -117,14 +123,18 @@ function UserPost({ userPost }) {
           <p className='mt-3'>{userPost.post_description}</p>
           <Row className='text-secondary'>
             <Col>
-              <p>Delete</p>
+              {isUserPost && (
+                <p className='text-start clickable' onClick={openDeleteModal}>Delete</p>
+              )}
             </Col>
             <Col>
               <p className='text-end'>{formatDate(userPost.post_dateCreated)}</p>
             </Col>
           </Row>
-        </Container>
+        </div>
       </Card>
+      <DeletePostModal show={showDeleteModal} onHide={hideDeleteModal} postId={userPost.post_id} />
+
     </div>
   );
 }
