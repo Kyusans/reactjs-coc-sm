@@ -47,15 +47,15 @@ function Dashboard() {
         <LoadingSpinner />
       ) : (
         <Container className='p-5 flex justify-center'>
-        <Col xs={12} md={7}>
-          {post === null && <div className='text-center'><b>No approved post yet</b></div>}
-          {post && post.map((userPost, index) => (
-            <div key={index} className='mt-3'>
-              <UserPost userPost={userPost}/>
-            </div>
-          ))}
-        </Col>
-      </Container>
+          <Col xs={12} md={7}>
+            {post === null && <div className='text-center'><b>No approved post yet</b></div>}
+            {post && post.map((userPost, index) => (
+              <div key={index} className='mt-3'>
+                <UserPost userPost={userPost} />
+              </div>
+            ))}
+          </Col>
+        </Container>
       )}
     </>
   )

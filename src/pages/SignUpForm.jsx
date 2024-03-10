@@ -60,8 +60,8 @@ function SignUpForm({ handleSignUp }) {
     const form = e.currentTarget;
     e.preventDefault();
     e.stopPropagation();
-    if (password.length < 8) {
-      toast.error('Password must be at least 8 characters');
+    if (password.length < 5) {
+      toast.error('Password must be at least 5 characters');
     } else if (password !== confirmPassword) {
       toast.error('Passwords do not match');
       setConfirmPassword('');

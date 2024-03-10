@@ -1,24 +1,31 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Col, Container, Image } from 'react-bootstrap';
+import { Button, Col, Container, Image } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import UserPost from '../../components/UserPost';
 import { toast } from 'sonner';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import UpdateProfileModal from '../../modal/UpdateProfileModal';
 
 function UserProfile() {
   const location = useLocation();
+  const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [userDetails, setUserDetails] = useState([]);
-  const navigateTo = useNavigate();
+  const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
+  const openUpdateProfileModal = () => { setShowUpdateProfileModal(true); }
+  const hideUpdatProfileeModal = async () => {
+    await getProfile();
+    await getUserDetails(); 
+    setShowUpdateProfileModal(false); 
+  }
 
   const getProfile = useCallback(async () => {
     setIsLoading(true);
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
-      const userId = location.state.userId;
 
       const jsonData = {
         userId: userId,
@@ -42,7 +49,7 @@ function UserProfile() {
     } finally {
       setIsLoading(false);
     }
-  }, [location.state.userId]);
+  }, [userId]);
 
   const getUserDetails = useCallback(async () => {
     setIsLoading(true);
@@ -56,6 +63,7 @@ function UserProfile() {
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "getUserDetails");
       const res = await axios.post(url, formData);
+      console.log("res sa getUserDetails userprofile : " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setUserDetails(res.data);
       }
@@ -70,20 +78,23 @@ function UserProfile() {
   useEffect(() => {
     getProfile();
     getUserDetails();
-  }, [getProfile, getUserDetails, navigateTo]);
+    setUserId(location.state.userId);
+    window.scrollTo(0, 0);
+  }, [getProfile, getUserDetails, location.state.userId]);
 
   return (
-    <div className='bg-zinc-900 text-white w-full vh-100'>
+    <div className=' text-white w-full vh-100'>
       <Col className='text-center'>
         <Container className='flex justify-center'>
           <Image
             className='mt-3'
-            style={{ maxWidth: 100, maxHeight: 100 }}
+            style={{ maxWidth: 300, maxHeight: 300 }}
             src={secureLocalStorage.getItem("url") + "images/" + userDetails.user_image}
             rounded
           />
         </Container>
-        <h5>{userDetails.user_username}</h5>
+        <h5 className='mt-3 mb-3'>{userDetails.user_username}</h5>
+        <Button variant='outline-light' onClick={openUpdateProfileModal}>Update profile picture</Button>
       </Col>
       {isLoading ? <LoadingSpinner /> :
         <Container className='p-5 flex justify-center'>
@@ -97,8 +108,7 @@ function UserProfile() {
           </Col>
         </Container>
       }
-
-
+      <UpdateProfileModal show={showUpdateProfileModal} onHide={hideUpdatProfileeModal} userId={userId} />
     </div>
   );
 }

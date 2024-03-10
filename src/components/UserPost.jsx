@@ -2,19 +2,27 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Col, Container, Image, Row } from 'react-bootstrap';
+import { Card, Col, Image, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
+import { formatDate } from './FormatDate';
+import DeletePostModal from '../modal/DeletePostModal';
 
 function UserPost({ userPost }) {
   const [postPoints, setPostpoints] = useState(userPost.likes);
   const [isUserLiked, setIsUserLiked] = useState(false);
+  const [isUserPost, setIsUserPost] = useState(false);
   const navigateTo = useNavigate();
 
-  const handleHeartPost = async (postId, userId) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const openDeleteModal = () => { setShowDeleteModal(true); }
+  const hideDeleteModal = () => { setShowDeleteModal(false); }
+
+  const handleHeartPost = async (postId) => {
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
+      const userId = secureLocalStorage.getItem("userId");
       const jsonData = {
         postId: postId,
         userId: userId
@@ -43,9 +51,10 @@ function UserPost({ userPost }) {
   const isUserLike = useCallback(async () => {
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
+      const userId = secureLocalStorage.getItem("userId");
       const jsonData = {
         postId: userPost.post_id,
-        userId: userPost.post_userId
+        userId: userId
       }
 
       const formData = new FormData();
@@ -54,31 +63,32 @@ function UserPost({ userPost }) {
 
       const res = await axios.post(url, formData);
       console.log("res.data ko to", res.data);
-      setIsUserLiked(res.data === 1 ? true : false);
+      setIsUserLiked(res.data === 1);
     } catch (error) {
       alert("Network error")
       console.log(error);
     }
-  }, [userPost.post_id, userPost.post_userId])
+  }, [userPost.post_id])
 
   function alertMoTo() {
     navigateTo("/user", { state: { userId: userPost.post_userId } })
   }
 
   useEffect(() => {
+    console.log("post mo to", userPost);
     setPostpoints(userPost.likes);
     isUserLike();
-  }, [isUserLike, userPost.likes])
-
+    setIsUserPost(userPost.post_userId === secureLocalStorage.getItem("userId"));
+  }, [isUserLike, userPost, userPost.likes])
 
   return (
     <div className='flex justify-center'>
       <Card className='text-white w-full bg-black p-1' rounded>
-        <Container className='p-3 bg-zinc-950'>
+        <div className='p-3 bg-zinc-950'>
           <Row className='align-items-center mb-2'>
             <Col xs='auto'>
               <Image
-                style={{ maxWidth: 50, maxHeight: 50 }}
+                style={{ maxWidth: 55, maxHeight: 100 }}
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.user_image}
                 roundedCircle
               />
@@ -103,17 +113,28 @@ function UserPost({ userPost }) {
           {userPost.post_image !== "" && (
             <div className='flex justify-center'>
               <Image
-                style={{ maxWidth: 500, maxHeight: 500, minHeight: 100, minWidth: 200 }}
+                style={{ maxWidth: 700, maxHeight: 500, minHeight: 100, minWidth: 200 }}
                 className='w-100'
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.post_image}
                 rounded
               />
             </div>
           )}
-
           <p className='mt-3'>{userPost.post_description}</p>
-        </Container>
+          <Row className='text-secondary'>
+            <Col>
+              {isUserPost && (
+                <p className='text-start clickable' onClick={openDeleteModal}>Delete</p>
+              )}
+            </Col>
+            <Col>
+              <p className='text-end'>{formatDate(userPost.post_dateCreated)}</p>
+            </Col>
+          </Row>
+        </div>
       </Card>
+      <DeletePostModal show={showDeleteModal} onHide={hideDeleteModal} postId={userPost.post_id} />
+
     </div>
   );
 }
