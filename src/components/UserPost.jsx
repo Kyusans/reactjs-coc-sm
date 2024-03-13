@@ -8,6 +8,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
 import { formatDate } from './FormatDate';
 import DeletePostModal from '../modal/DeletePostModal';
+import CommentModal from '../modal/CommentModal';
 
 function UserPost({ userPost }) {
   const [postPoints, setPostpoints] = useState(userPost.likes);
@@ -18,6 +19,10 @@ function UserPost({ userPost }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const openDeleteModal = () => { setShowDeleteModal(true); }
   const hideDeleteModal = () => { setShowDeleteModal(false); }
+
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const openCommentModal = () => { setShowCommentModal(true); }
+  const hideCommentModal = () => { setShowCommentModal(false); }
 
   const handleHeartPost = async (postId) => {
     try {
@@ -62,7 +67,7 @@ function UserPost({ userPost }) {
       formData.append("json", JSON.stringify(jsonData));
 
       const res = await axios.post(url, formData);
-      console.log("res.data ko to", res.data);
+      // console.log("res.data userLike", res.data);
       setIsUserLiked(res.data === 1);
     } catch (error) {
       alert("Network error")
@@ -70,7 +75,7 @@ function UserPost({ userPost }) {
     }
   }, [userPost.post_id])
 
-  function alertMoTo() {
+  function navigateToUser() {
     navigateTo("/user", { state: { userId: userPost.post_userId } })
   }
 
@@ -83,18 +88,20 @@ function UserPost({ userPost }) {
 
   return (
     <div className='flex justify-center'>
-      <Card className='text-white w-full bg-black p-1' rounded>
+      <Card className='text-white w-full bg-black p-1'>
         <div className='p-3 bg-zinc-950'>
           <Row className='align-items-center mb-2'>
             <Col xs='auto'>
               <Image
-                style={{ maxWidth: 55, maxHeight: 100 }}
+                className='clickable'
+                onClick={navigateToUser}
+                style={{ maxWidth: 55, maxHeight: 100, minHeight: 50, minWidth: 20 }}
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.user_image}
                 roundedCircle
               />
             </Col>
             <Col>
-              <h5 onClick={() => alertMoTo()} className='text-sm clickable'>{userPost.user_username}</h5>
+              <h5 onClick={navigateToUser} className='text-sm clickable'>{userPost.user_username}</h5>
             </Col>
             <Col xs='auto' className='d-flex flex-column align-items-center'>
               <h6 className='w-50'>{postPoints}</h6>
@@ -116,25 +123,30 @@ function UserPost({ userPost }) {
                 style={{ maxWidth: 700, maxHeight: 500, minHeight: 100, minWidth: 200 }}
                 className='w-100'
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.post_image}
-                rounded
               />
             </div>
           )}
           <p className='mt-3'>{userPost.post_description}</p>
           <Row className='text-secondary'>
             <Col>
-              {isUserPost && (
-                <p className='text-start clickable' onClick={openDeleteModal}>Delete</p>
-              )}
+              <div>
+                <span className='me-2 clickable' onClick={openCommentModal}>
+                  Comment
+                </span>
+                {isUserPost && (
+                  <span className='text-start clickable' onClick={openDeleteModal}>Delete</span>
+                )}
+              </div>
             </Col>
             <Col>
               <p className='text-end'>{formatDate(userPost.post_dateCreated)}</p>
             </Col>
           </Row>
+
         </div>
       </Card>
       <DeletePostModal show={showDeleteModal} onHide={hideDeleteModal} postId={userPost.post_id} />
-
+      <CommentModal show={showCommentModal} onHide={hideCommentModal} postId={userPost.post_id} />
     </div>
   );
 }

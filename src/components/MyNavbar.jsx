@@ -10,10 +10,12 @@ import { faArrowLeft, faBars, faClock, faHome, faPlus, faSearch, faSignOutAlt, f
 import secureLocalStorage from 'react-secure-storage';
 import CreatePost from '../pages/users/CreatePost';
 import { useNavigate } from 'react-router-dom';
+import { Image } from 'react-bootstrap';
 
 function MyNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [userFullName, setUserFullName] = useState(secureLocalStorage.getItem("username"));
+  const [userImage, setUserImage] = useState(secureLocalStorage.getItem("image"));
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const openCreatePost = () => { setShowCreatePostModal(true); }
@@ -21,14 +23,14 @@ function MyNavbar() {
     setShowCreatePostModal(false);
   }
 
-
   useEffect(() => {
     if (userFullName !== null) {
       setUserFullName(userFullName.replace(/"/g, ""));
+      setUserImage(userImage.replace(/"/g, ""));
     } else {
       setUserFullName("");
     }
-  }, [userFullName])
+  }, [userFullName, userImage])
 
   const handleToggleOffcanvas = () => {
     setShowOffcanvas(!showOffcanvas);
@@ -38,11 +40,16 @@ function MyNavbar() {
 
   const openMyProfile = () => {
     handleToggleOffcanvas();
-    console.log("idmoto", secureLocalStorage.getItem("userId"));
     navigateTo(`/user`, { state: { userId: secureLocalStorage.getItem("userId") } });
   }
 
+  const openDashboard = () =>{
+    handleToggleOffcanvas();
+    navigateTo(`/dashboard`);
+  }
+
   useEffect(() => {
+    console.log("image mo to", secureLocalStorage.getItem("image"));
     if (secureLocalStorage.getItem("isAdminLoggedIn") === "true") {
       setIsAdminLoggedIn(true);
     }
@@ -55,8 +62,8 @@ function MyNavbar() {
           <Button variant="outline-light" onClick={handleToggleOffcanvas}>
             <FontAwesomeIcon icon={faBars} size='lg' />
           </Button>
-          <Navbar.Brand href="/coc/dashboard">
-            <b>Meet Ta</b>
+          <Navbar.Brand onClick={() => navigateTo(`/dashboard`)}>
+            <b className='clickable'>Meet Ta</b>
           </Navbar.Brand>
           <Offcanvas
             show={showOffcanvas}
@@ -65,14 +72,16 @@ function MyNavbar() {
             className="custom-offcanvas"
           >
             <Offcanvas.Header closeButton={false} className='mt-1'>
-              <Navbar.Brand><h5>{userFullName}</h5></Navbar.Brand>
+              <Navbar.Brand>
+                <h5 className='ms-2 clickable' onClick={openMyProfile}>{userFullName}</h5>
+              </Navbar.Brand>
               <div onClick={() => setShowOffcanvas(false)}>
                 <Button variant='outline-light'><FontAwesomeIcon icon={faArrowLeft} size='lg' /> </Button>
               </div>
             </Offcanvas.Header>
-            <Offcanvas.Body className='mt-4 flex flex-col justify-between'>
+            <Offcanvas.Body className='mt-1 flex flex-col justify-between'>
               <Nav >
-                <Nav.Link href="/coc/dashboard">
+                <Nav.Link onClick={openDashboard}>
                   <FontAwesomeIcon icon={faHome} className="mr-2" />
                   Home
                 </Nav.Link>
@@ -90,10 +99,6 @@ function MyNavbar() {
                 <Nav.Link onClick={openCreatePost}>
                   <FontAwesomeIcon className='clickable mr-2' icon={faPlus} />
                   Create Post
-                </Nav.Link>
-                <Nav.Link>
-                  <FontAwesomeIcon icon={faSearch} className="mr-2" />
-                  Search
                 </Nav.Link>
               </Nav>
               <div>

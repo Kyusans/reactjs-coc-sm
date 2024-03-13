@@ -30,8 +30,10 @@ function TakePicture({ onHide }) {
       if (capturedImage) {
         const blob = await fetch(capturedImage).then((res) => res.blob());
         const file = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
+        console.log("filefilefile", file);
         formData.append('file', file);
       }
+
 
       const res = await axios({
         url: url,
@@ -45,7 +47,7 @@ function TakePicture({ onHide }) {
         case 1:
           toast.success("success", "Success!");
           setTimeout(() => {
-            handleOnHide();
+            onHide();
           }, 1000);
           break;
         case 2:

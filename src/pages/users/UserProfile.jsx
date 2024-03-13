@@ -15,11 +15,12 @@ function UserProfile() {
   const [userProfile, setUserProfile] = useState(null);
   const [userDetails, setUserDetails] = useState([]);
   const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
+  const [isUser, setIsUser] = useState(false);
   const openUpdateProfileModal = () => { setShowUpdateProfileModal(true); }
   const hideUpdatProfileeModal = async () => {
     await getProfile();
-    await getUserDetails(); 
-    setShowUpdateProfileModal(false); 
+    await getUserDetails();
+    setShowUpdateProfileModal(false);
   }
 
   const getProfile = useCallback(async () => {
@@ -66,6 +67,7 @@ function UserProfile() {
       console.log("res sa getUserDetails userprofile : " + JSON.stringify(res.data));
       if (res.data !== 0) {
         setUserDetails(res.data);
+        secureLocalStorage.setItem("image", res.data.user_image);
       }
     } catch {
       toast.error("Network error");
@@ -79,32 +81,34 @@ function UserProfile() {
     getProfile();
     getUserDetails();
     setUserId(location.state.userId);
+    setIsUser(secureLocalStorage.getItem("userId") === location.state.userId);
     window.scrollTo(0, 0);
   }, [getProfile, getUserDetails, location.state.userId]);
 
   return (
-    <div className=' text-white w-full vh-100'>
+    <div className=' text-white w-full vh-100 mt-32'>
       <Col className='text-center'>
         <Container className='flex justify-center'>
           <Image
             className='mt-3'
-            style={{ maxWidth: 300, maxHeight: 300 }}
+            style={{ maxWidth: 200, maxHeight: 500, minWidth: 100, minHeight: 175 }}
             src={secureLocalStorage.getItem("url") + "images/" + userDetails.user_image}
-            rounded
+            roundedCircle
           />
         </Container>
         <h5 className='mt-3 mb-3'>{userDetails.user_username}</h5>
-        <Button variant='outline-light' onClick={openUpdateProfileModal}>Update profile picture</Button>
+        {isUser && <Button variant='outline-light' onClick={openUpdateProfileModal}>Update Profile Picture</Button>}
       </Col>
       {isLoading ? <LoadingSpinner /> :
         <Container className='p-5 flex justify-center'>
           <Col xs={12} md={7}>
-            {userProfile === null && <div className='text-center'><b>No approved post yet</b></div>}
-            {userProfile && userProfile.map((userPost, index) => (
+            {userProfile !== null ? userProfile.map((userPost, index) => (
               <div key={index} className='mt-3'>
                 <UserPost userPost={userPost} />
               </div>
-            ))}
+            )) :
+              <div className='text-center'><b>No approved post yet</b></div>
+            }
           </Col>
         </Container>
       }

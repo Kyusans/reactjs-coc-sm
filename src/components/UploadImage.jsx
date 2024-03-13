@@ -4,7 +4,7 @@ import { Button, Container, Form, Spinner } from 'react-bootstrap'
 import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
 
-function UploadImage({ onHide }) {
+function UploadImage() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [validated, setValidated] = useState(false);
@@ -46,7 +46,7 @@ function UploadImage({ onHide }) {
         case 1:
           toast.success("success", "Success!");
           setTimeout(() => {
-            onHide();
+            window.location.reload();
           }, 1000);
           break;
         case 2:
