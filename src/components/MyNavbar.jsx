@@ -6,11 +6,10 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faBars, faClock, faHome, faPlus, faSearch, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faBars, faClock, faHome, faPlus, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import secureLocalStorage from 'react-secure-storage';
 import CreatePost from '../pages/users/CreatePost';
 import { useNavigate } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
 
 function MyNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
