@@ -26,7 +26,7 @@ function App() {
     <>
       <div className="text-white bg-zinc-800">
         <Toaster richColors position='top-center' duration={1500}/>
-        <BrowserRouter basename='coc'>
+        <BrowserRouter basename='meeta'>
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="*" element={<MainLayout />} />

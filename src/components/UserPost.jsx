@@ -10,6 +10,7 @@ import { formatDate } from './FormatDate';
 import DeletePostModal from '../modal/DeletePostModal';
 import CommentModal from '../modal/CommentModal';
 import GetPostLikers from '../modal/GetPostLikers';
+import ViewImage from '../modal/ViewImage';
 
 function UserPost({ userPost }) {
   const [postPoints, setPostpoints] = useState(userPost.likes);
@@ -28,6 +29,10 @@ function UserPost({ userPost }) {
   const [showPostLikersModal, setShowPostLikersModal] = useState(false);
   const openPostLikersModal = () => { setShowPostLikersModal(true); }
   const hidePostLikersModal = () => { setShowPostLikersModal(false); }
+
+  const [showViewImage, setShowViewImage] = useState(false);
+  const openViewImage = () =>{setShowViewImage(true)}
+  const hideViewImage = () =>{setShowViewImage(false)}
 
   const handleHeartPost = async (postId) => {
     try {
@@ -126,8 +131,9 @@ function UserPost({ userPost }) {
           {userPost.post_image !== "" && (
             <div className='flex justify-center'>
               <Image
+                onClick={openViewImage}
                 style={{ maxWidth: 700, maxHeight: 500, minHeight: 100, minWidth: 200 }}
-                className='w-100'
+                className='w-100 clickable'
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.post_image}
               />
             </div>
@@ -154,6 +160,7 @@ function UserPost({ userPost }) {
       <DeletePostModal show={showDeleteModal} onHide={hideDeleteModal} postId={userPost.post_id} />
       <CommentModal show={showCommentModal} onHide={hideCommentModal} postId={userPost.post_id} />
       <GetPostLikers show={showPostLikersModal} onHide={hidePostLikersModal} postId={userPost.post_id} />
+      <ViewImage show={showViewImage} onHide={hideViewImage} fileName={userPost.post_image} />
     </div>
   );
 }

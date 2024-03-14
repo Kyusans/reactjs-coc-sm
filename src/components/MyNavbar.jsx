@@ -103,7 +103,7 @@ function MyNavbar() {
               <div>
                 <NavDropdown title="Account" drop='up'>
                   {/* <NavDropdown.Item href="/gsd/account/password"><FontAwesomeIcon icon={faKey} /> Change Password</NavDropdown.Item> */}
-                  <NavDropdown.Item href="/coc" onClick={handleSignout}><FontAwesomeIcon icon={faSignOutAlt} /> Signout</NavDropdown.Item>
+                  <NavDropdown.Item href="/meeta" onClick={handleSignout}><FontAwesomeIcon icon={faSignOutAlt} /> Signout</NavDropdown.Item>
                 </NavDropdown>
               </div>
             </Offcanvas.Body>

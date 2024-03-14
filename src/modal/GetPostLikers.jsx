@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react'
-import { Col, Image, Modal, Row } from 'react-bootstrap'
+import React, { useCallback, useEffect, useState } from 'react';
+import { Col, Image, Modal, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import secureLocalStorage from 'react-secure-storage'
+import secureLocalStorage from 'react-secure-storage';
 import { toast } from 'sonner';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -40,43 +40,40 @@ function GetPostLikers({ show, onHide, postId }) {
   }, [postId]);
 
   useEffect(() => {
-   if(show){
-    getPostLikers();
-   }
+    if (show) {
+      getPostLikers();
+    }
   }, [getPostLikers, show])
 
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
-        <h3>People who likes this post</h3>
+        <h3>People who like this post</h3>
       </Modal.Header>
-      {isLoading ? <LoadingSpinner /> : (
-        <Modal.Body>
-          {postLikers.length > 0 ?
+      <Modal.Body>
+        {isLoading ? <LoadingSpinner /> :
+          (postLikers.length > 0 ?
             (postLikers.map((likers, index) => (
-              <>
-                <Row className='align-items-center mb-3 clickable' key={index} onClick={() => navigateToUser(likers.user_id)} >
-                  <Col xs='auto'>
-                    <Image
-                      className='clickable'
-                      style={{ maxWidth: 55, maxHeight: 100, minHeight: 50, minWidth: 20 }}
-                      src={secureLocalStorage.getItem("url") + "images/" + likers.user_image}
-                      roundedCircle
-                    />
-                  </Col>
-                  <Col>
-                    <h5 className='text-sm clickable'>{likers.user_username}</h5>
-                  </Col>
-                </Row>
-              </>
+              <Row key={index} className='align-items-center mb-3 clickable' onClick={() => navigateToUser(likers.user_id)} >
+                <Col xs='auto'>
+                  <Image
+                    className='clickable'
+                    style={{ maxWidth: 55, maxHeight: 100, minHeight: 50, minWidth: 20 }}
+                    src={secureLocalStorage.getItem("url") + "images/" + likers.user_image}
+                    roundedCircle
+                  />
+                </Col>
+                <Col>
+                  <h5 className='text-sm clickable'>{likers.user_username}</h5>
+                </Col>
+              </Row>
             )))
             :
-            <p>No one like this post yet</p>
-          }
-        </Modal.Body>
-      )}
+            <p>No one likes this post yet</p>
+          )}
+      </Modal.Body>
     </Modal>
   )
 }
 
-export default GetPostLikers
+export default GetPostLikers;
