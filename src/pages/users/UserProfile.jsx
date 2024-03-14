@@ -83,7 +83,8 @@ function UserProfile() {
     setUserId(location.state.userId);
     setIsUser(secureLocalStorage.getItem("userId") === location.state.userId);
     window.scrollTo(0, 0);
-  }, [getProfile, getUserDetails, location.state.userId]);
+    console.log("userId sa USERPROFILE", userId);
+  }, [getProfile, getUserDetails, location.state.userId, userId]);
 
   return (
     <div className=' text-white w-full vh-100 mt-32'>
