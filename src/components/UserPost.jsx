@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 import { formatDate } from './FormatDate';
 import DeletePostModal from '../modal/DeletePostModal';
 import CommentModal from '../modal/CommentModal';
+import GetPostLikers from '../modal/GetPostLikers';
+import ViewImage from '../modal/ViewImage';
 
 function UserPost({ userPost }) {
   const [postPoints, setPostpoints] = useState(userPost.likes);
@@ -23,6 +25,14 @@ function UserPost({ userPost }) {
   const [showCommentModal, setShowCommentModal] = useState(false);
   const openCommentModal = () => { setShowCommentModal(true); }
   const hideCommentModal = () => { setShowCommentModal(false); }
+
+  const [showPostLikersModal, setShowPostLikersModal] = useState(false);
+  const openPostLikersModal = () => { setShowPostLikersModal(true); }
+  const hidePostLikersModal = () => { setShowPostLikersModal(false); }
+
+  const [showViewImage, setShowViewImage] = useState(false);
+  const openViewImage = () =>{setShowViewImage(true)}
+  const hideViewImage = () =>{setShowViewImage(false)}
 
   const handleHeartPost = async (postId) => {
     try {
@@ -74,6 +84,7 @@ function UserPost({ userPost }) {
       console.log(error);
     }
   }, [userPost.post_id])
+  
 
   function navigateToUser() {
     navigateTo("/user", { state: { userId: userPost.post_userId } })
@@ -104,7 +115,7 @@ function UserPost({ userPost }) {
               <h5 onClick={navigateToUser} className='text-sm clickable'>{userPost.user_username}</h5>
             </Col>
             <Col xs='auto' className='d-flex flex-column align-items-center'>
-              <h6 className='w-50'>{postPoints}</h6>
+              <h6 className='w-50 clickable' onClick={openPostLikersModal}>{postPoints}</h6>
               <FontAwesomeIcon icon={faHeart} size='lg' className={`clickable ${isUserLiked ? "text-red-500" : ""}`}
                 onClick={() => handleHeartPost(userPost.post_id, userPost.post_userId)}
               />
@@ -120,8 +131,9 @@ function UserPost({ userPost }) {
           {userPost.post_image !== "" && (
             <div className='flex justify-center'>
               <Image
+                onClick={openViewImage}
                 style={{ maxWidth: 700, maxHeight: 500, minHeight: 100, minWidth: 200 }}
-                className='w-100'
+                className='w-100 clickable                                                      '
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.post_image}
               />
             </div>
@@ -147,6 +159,8 @@ function UserPost({ userPost }) {
       </Card>
       <DeletePostModal show={showDeleteModal} onHide={hideDeleteModal} postId={userPost.post_id} />
       <CommentModal show={showCommentModal} onHide={hideCommentModal} postId={userPost.post_id} />
+      <GetPostLikers show={showPostLikersModal} onHide={hidePostLikersModal} postId={userPost.post_id} />
+      <ViewImage show={showViewImage} onHide={hideViewImage} fileName={userPost.post_image} />
     </div>
   );
 }

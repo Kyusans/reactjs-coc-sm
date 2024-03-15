@@ -5,7 +5,8 @@ import secureLocalStorage from 'react-secure-storage'
 import { toast } from 'sonner';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import UserPost from '../../components/UserPost';
-import { Col, Container } from 'react-bootstrap';
+import { Button, Col, Container } from 'react-bootstrap';
+import CreatePost from './CreatePost';
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +14,11 @@ function Dashboard() {
 
   const navigateTo = useNavigate();
 
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+  const openCreatePost = () => { setShowCreatePostModal(true); }
+  const hideCreatePost = () => {
+    setShowCreatePostModal(false);
+  }
 
   const getApprovedPost = async () => {
     setIsLoading(true);
@@ -43,10 +49,13 @@ function Dashboard() {
   }, [navigateTo])
   return (
     <>
+      <Container className='text-center mt-3'>
+        <Button variant='outline-light' size='lg' onClick={openCreatePost}>Create Post</Button>
+      </Container>
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <Container className='p-5 flex justify-center'>
+        <Container className='p-3 flex justify-center'>
           <Col xs={12} md={7}>
             {post === null && <div className='text-center'><b>No approved post yet</b></div>}
             {post && post.map((userPost, index) => (
@@ -57,6 +66,7 @@ function Dashboard() {
           </Col>
         </Container>
       )}
+      <CreatePost show={showCreatePostModal} onHide={hideCreatePost} />
     </>
   )
 }

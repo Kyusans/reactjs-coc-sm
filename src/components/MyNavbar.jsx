@@ -6,11 +6,10 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faBars, faClock, faHome, faPlus, faSearch, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faBars, faClock, faHome, faPlus, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import secureLocalStorage from 'react-secure-storage';
 import CreatePost from '../pages/users/CreatePost';
 import { useNavigate } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
 
 function MyNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -104,7 +103,7 @@ function MyNavbar() {
               <div>
                 <NavDropdown title="Account" drop='up'>
                   {/* <NavDropdown.Item href="/gsd/account/password"><FontAwesomeIcon icon={faKey} /> Change Password</NavDropdown.Item> */}
-                  <NavDropdown.Item href="/coc" onClick={handleSignout}><FontAwesomeIcon icon={faSignOutAlt} /> Signout</NavDropdown.Item>
+                  <NavDropdown.Item href="/meeta" onClick={handleSignout}><FontAwesomeIcon icon={faSignOutAlt} /> Signout</NavDropdown.Item>
                 </NavDropdown>
               </div>
             </Offcanvas.Body>

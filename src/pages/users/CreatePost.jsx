@@ -1,9 +1,10 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import React, { useState } from 'react';
-import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap';
+import React, { useCallback, useRef, useState } from 'react';
+import { Button, Col, Container, Form, Modal, Row, Spinner } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
+import Webcam from 'react-webcam';
 import { toast } from 'sonner';
 
 function CreatePost({ show, onHide }) {
@@ -13,6 +14,12 @@ function CreatePost({ show, onHide }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isImageUpload, setIsImageUpload] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
+  const webcamRef = useRef(null);
+  const [videoConstraints, setVideoConstraints] = useState({
+    facingMode: 'user',
+  });
 
   const handleOnHide = () => {
     setTitle('');
@@ -20,6 +27,7 @@ function CreatePost({ show, onHide }) {
     setImage(null);
     setImagePreview(null);
     setValidated(false);
+    handleRetake();
     onHide();
   };
 
@@ -33,6 +41,10 @@ function CreatePost({ show, onHide }) {
       };
       reader.readAsDataURL(selectedImage);
     }
+  };
+
+  const handleRetake = () => {
+    setCapturedImage(null);
   };
 
   const createPost = async () => {
@@ -51,12 +63,17 @@ function CreatePost({ show, onHide }) {
       console.log('userId mo to: ', userId);
       console.log('url mo to: ', url);
       console.log('jsonData mo to: ', jsonData);
-
       const formData = new FormData();
       formData.append("json", JSON.stringify(jsonData));
       formData.append("operation", "createPost");
-      formData.append('file', image !== null ? image : "");
-
+      if (capturedImage) {
+        const blob = await fetch(capturedImage).then((res) => res.blob());
+        const file = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
+        console.log("filefilefile", file);
+        formData.append('file', file);
+      } else {
+        formData.append('file', image !== null ? image : "");
+      }
       const res = await axios.post(url, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -99,6 +116,15 @@ function CreatePost({ show, onHide }) {
     setValidated(true);
   }
 
+  const capture = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setCapturedImage(imageSrc);
+  };
+
+  const handleUploadSwitch = () => {
+    setIsImageUpload(!isImageUpload);
+  }
+
   return (
     <Modal show={show} onHide={handleOnHide} fullscreen>
       <Modal.Body className='bg-zinc-900 text-white'>
@@ -138,15 +164,25 @@ function CreatePost({ show, onHide }) {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Form.Group>
-              <Form.Group className='mb-4'>
-                <Form.Label>Image (Optional)</Form.Label>
-                <Form.Control
-                  className='bg-dark text-white'
-                  type='file'
-                  onChange={handleImageChange}
-                />
-              </Form.Group>
-              <Container className='text-end'>
+              <Container>
+
+                {isImageUpload ?
+                  (<Button onClick={handleUploadSwitch} variant='outline-light'>Take a picture</Button>) :
+                  (<Button onClick={handleUploadSwitch} variant='outline-light'>Upload image </Button>)
+                }
+
+              </Container>
+              {isImageUpload &&
+                <Form.Group className='mb-4'>
+                  <Form.Label>Image (Optional)</Form.Label>
+                  <Form.Control
+                    className='bg-dark text-white'
+                    type='file'
+                    onChange={handleImageChange}
+                  />
+                </Form.Group>
+              }
+              <Container className='text-end mt-3'>
                 <Button variant='outline-secondary' onClick={handleOnHide}>Cancel</Button>{' '}
                 <Button type='submit' variant='outline-light' disabled={isLoading}><b>Post</b></Button>
               </Container>
@@ -157,7 +193,7 @@ function CreatePost({ show, onHide }) {
               className='mt-3 w-75 border-[1px] border-[#ffffff] d-flex justify-content-center align-items-center'
               style={{ minHeight: '150px' }}
             >
-              {imagePreview === null ? (
+              {isImageUpload ? (imagePreview === null ? (
                 <div>No image selected</div>
               ) : (
                 <div style={{ marginTop: '10px', maxWidth: '100%', overflow: 'hidden' }}>
@@ -167,7 +203,56 @@ function CreatePost({ show, onHide }) {
                     style={{ width: '100%', height: 'auto' }}
                   />
                 </div>
-              )}
+              ))
+                :
+                (<Container className='text-center mt-3'>
+                  {capturedImage ? (
+                    <img src={capturedImage} alt="Captured" className="img-fluid" />
+                  ) : (
+                    <Row className='d-flex  justify-content-center'>
+                      <Webcam
+                        audio={false}
+                        ref={webcamRef}
+                        screenshotFormat="image/jpeg"
+                        className="w-100"
+                        videoConstraints={videoConstraints}
+                      />
+                    </Row>
+                  )}
+                  <Row className='d-flex justify-content-center mt-3'>
+                    {capturedImage ? (
+                      <>
+                        {isLoading ?
+                          <Container className='text-center mt-2'>
+                            <Spinner variant='success' />
+                          </Container>
+                          :
+                          <>
+                            {/* <Container className='mt-3 mb-3'>
+                                  <FloatingLabel label="Add comment">
+                                    <Form.Control type='text' value={commentText}
+                                      onChange={(e) => setCommentText(e.target.value)}
+                                      placeholder='Add comment'
+                                    />
+                                  </FloatingLabel>
+                                </Container> */}
+                            <Button variant='outline-danger big-height w-50 mt-2' onClick={handleRetake}>
+                              Retake
+                            </Button>
+                          </>
+                        }
+                      </>
+                    ) : (
+                      <div className='p-3'>
+                        <Button variant='outline-success big-height w-50' onClick={capture}>
+                          Capture Photo
+                        </Button>
+                      </div>
+                    )}
+                  </Row>
+
+                </Container>)
+              }
             </Container>
           </Col>
         </Row>

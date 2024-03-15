@@ -1,8 +1,6 @@
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useCallback, useRef, useState } from 'react'
-import { Button, Container, FloatingLabel, Form, Modal, Row, Spinner } from 'react-bootstrap';
+import { Button, Container, Row, Spinner } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import Webcam from 'react-webcam';
 import { toast } from 'sonner';
@@ -33,7 +31,6 @@ function TakePicture({ onHide }) {
         console.log("filefilefile", file);
         formData.append('file', file);
       }
-
 
       const res = await axios({
         url: url,
@@ -87,11 +84,6 @@ function TakePicture({ onHide }) {
     });
   };
 
-  const handleOnHide = () => {
-    onHide();
-    setCapturedImage(null);
-  }
-
   return (
     <>
       <Container className='text-center mt-3'>
@@ -117,14 +109,6 @@ function TakePicture({ onHide }) {
                 </Container>
                 :
                 <>
-                  {/* <Container className='mt-3 mb-3'>
-                          <FloatingLabel label="Add comment">
-                            <Form.Control type='text' value={commentText}
-                              onChange={(e) => setCommentText(e.target.value)}
-                              placeholder='Add comment'
-                            />
-                          </FloatingLabel>
-                        </Container> */}
                   <Button variant='outline-success big-height w-50 me-1' onClick={handleCaptureSubmit}>
                     Submit
                   </Button>

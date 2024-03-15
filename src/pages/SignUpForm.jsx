@@ -34,7 +34,7 @@ function SignUpForm({ handleSignUp }) {
       toast.dismiss(loadingToast);
 
       if (res.data === -1) {
-        toast.error('Account already exists!');
+        toast.error('Username already exists!');
         return;
       } else if (res.data === -2) {
         toast.error('Email already exists!');
@@ -98,7 +98,7 @@ function SignUpForm({ handleSignUp }) {
               required
             />
             <Form.Control.Feedback type="invalid" className='font-bold'>
-              This field is required
+              Enter a valid email
             </Form.Control.Feedback>
           </FloatingLabel>
 
