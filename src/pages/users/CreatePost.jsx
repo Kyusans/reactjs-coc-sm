@@ -14,7 +14,7 @@ function CreatePost({ show, onHide }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isImageUpload, setIsImageUpload] = useState(true);
+  const [isImageUpload, setIsImageUpload] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const webcamRef = useRef(null);
   const [videoConstraints, setVideoConstraints] = useState({
@@ -27,6 +27,7 @@ function CreatePost({ show, onHide }) {
     setImage(null);
     setImagePreview(null);
     setValidated(false);
+    handleRetake();
     onHide();
   };
 
@@ -163,7 +164,7 @@ function CreatePost({ show, onHide }) {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Form.Group>
-              <Container className='text-center'>
+              <Container>
 
                 {isImageUpload ?
                   (<Button onClick={handleUploadSwitch} variant='outline-light'>Take a picture</Button>) :
@@ -181,7 +182,7 @@ function CreatePost({ show, onHide }) {
                   />
                 </Form.Group>
               }
-              <Container className='text-end'>
+              <Container className='text-end mt-3'>
                 <Button variant='outline-secondary' onClick={handleOnHide}>Cancel</Button>{' '}
                 <Button type='submit' variant='outline-light' disabled={isLoading}><b>Post</b></Button>
               </Container>
@@ -242,9 +243,11 @@ function CreatePost({ show, onHide }) {
                         }
                       </>
                     ) : (
-                      <Button variant='outline-success big-height w-50' onClick={capture}>
-                        Capture Photo
-                      </Button>
+                      <div className='p-3'>
+                        <Button variant='outline-success big-height w-50' onClick={capture}>
+                          Capture Photo
+                        </Button>
+                      </div>
                     )}
                   </Row>
 

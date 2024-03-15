@@ -9,7 +9,6 @@ function ViewImage({ show, onHide, fileName }) {
         <Image
           src={secureLocalStorage.getItem("url") + "images/" + fileName}
           style={{ maxWidth: 800, maxHeight: 800, minHeight: 700, minWidth: 700 }}
-
         />
       </Modal.Body>
       <Modal.Footer>

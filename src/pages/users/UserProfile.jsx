@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useLocation } from 'react-router-dom';
 import UpdateProfileModal from '../../modal/UpdateProfileModal';
+import ViewImage from '../../modal/ViewImage';
 
 function UserProfile() {
   const location = useLocation();
@@ -76,6 +77,10 @@ function UserProfile() {
     }
   }, [location.state.userId]);
 
+  const [showViewImage, setShowViewImage] = useState(false);
+  const openViewImage = () => { setShowViewImage(true) }
+  const hideViewImage = () => { setShowViewImage(false) }
+
 
   useEffect(() => {
     getProfile();
@@ -83,15 +88,15 @@ function UserProfile() {
     setUserId(location.state.userId);
     setIsUser(secureLocalStorage.getItem("userId") === location.state.userId);
     window.scrollTo(0, 0);
-    console.log("userId sa USERPROFILE", userId);
-  }, [getProfile, getUserDetails, location.state.userId, userId]);
+  }, [getProfile, getUserDetails, location.state.userId]);
 
   return (
-    <div className=' text-white w-full vh-100 mt-32'>
+    <div className=' text-white w-full vh-100 mt-3'>
       <Col className='text-center'>
         <Container className='flex justify-center'>
           <Image
-            className='mt-3'
+            onClick={openViewImage}
+            className='mt-3 clickable'
             style={{ maxWidth: 200, maxHeight: 500, minWidth: 100, minHeight: 175 }}
             src={secureLocalStorage.getItem("url") + "images/" + userDetails.user_image}
             roundedCircle
@@ -114,6 +119,7 @@ function UserProfile() {
         </Container>
       }
       <UpdateProfileModal show={showUpdateProfileModal} onHide={hideUpdatProfileeModal} userId={userId} />
+      <ViewImage show={showViewImage} onHide={hideViewImage} fileName={userDetails.user_image} />
     </div>
   );
 }
