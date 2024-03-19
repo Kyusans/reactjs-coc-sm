@@ -88,6 +88,8 @@ function UserPost({ userPost }) {
 
   function navigateToUser() {
     navigateTo("/user", { state: { userId: userPost.post_userId } })
+    // sessionStorage.setItem("selectedProfile", userPost.post_userId);
+    // navigateTo("/user");
   }
 
   useEffect(() => {
@@ -133,7 +135,7 @@ function UserPost({ userPost }) {
               <Image
                 onClick={openViewImage}
                 style={{ maxWidth: 700, maxHeight: 500, minHeight: 100, minWidth: 200 }}
-                className='w-100 clickable                                                      '
+                className='w-100 clickable'
                 src={secureLocalStorage.getItem("url") + "images/" + userPost.post_image}
               />
             </div>

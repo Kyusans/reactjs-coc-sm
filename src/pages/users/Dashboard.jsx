@@ -17,6 +17,7 @@ function Dashboard() {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const openCreatePost = () => { setShowCreatePostModal(true); }
   const hideCreatePost = () => {
+    getApprovedPost();
     setShowCreatePostModal(false);
   }
 
@@ -49,7 +50,7 @@ function Dashboard() {
   }, [navigateTo])
   return (
     <>
-      <Container className='text-center mt-3'>
+      <Container className='text-center mt-24'>
         <Button variant='outline-light' size='lg' onClick={openCreatePost}>Create Post</Button>
       </Container>
       {isLoading ? (

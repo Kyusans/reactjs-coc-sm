@@ -1,14 +1,21 @@
-import React from 'react'
-import { Card, Col, Image, Row } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Card, Col, Image, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 
 function CommentComponent({ comments }) {
   const navigateTo = useNavigate();
+  const [expanded, setExpanded] = useState(false);
 
   function navigateToUser() {
-    navigateTo("/user", { state: { userId: comments.com_userId } })
+    navigateTo("/user", { state: { userId: comments.com_userId } });
+    // navigateTo("/user");
   }
+
+  const maxLength = 400; 
+  const truncatedText = comments.com_commentText.length > maxLength ?
+    comments.com_commentText.substring(0, maxLength) + "..." :
+    comments.com_commentText;
 
   return (
     <Card>
@@ -27,12 +34,19 @@ function CommentComponent({ comments }) {
           </Col>
         </Row>
         <Row>
-          <h6>{comments.com_commentText}</h6>
+          <h6>
+            {expanded ? comments.com_commentText : truncatedText}
+            {!expanded && comments.com_commentText.length > maxLength &&
+              <Button className='float-end text-secondary' variant="link" onClick={() => setExpanded(true)}>See more</Button>
+            }
+            {expanded &&
+              <Button className='float-end text-secondary' variant="link" onClick={() => setExpanded(false)}>Show less</Button>
+            }
+          </h6>
         </Row>
-
       </Card.Body>
     </Card>
-  )
+  );
 }
 
-export default CommentComponent
+export default CommentComponent;

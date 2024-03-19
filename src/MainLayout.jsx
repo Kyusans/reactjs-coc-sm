@@ -8,15 +8,17 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 
 function MainLayout() {
   return (
-    <div className='h-screen'>
+    <>
       <MyNavbar />
-      <Routes>
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path="/submit" element={<CreatePost />} />
-        <Route path="/user" element={<UserProfile />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
-    </div>
+      <div className='h-screen'>
+        <Routes>
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path="/submit" element={<CreatePost />} />
+          <Route path="/user" element={<UserProfile />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </div>
+    </>
   )
 }
 
