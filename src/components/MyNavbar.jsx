@@ -40,9 +40,11 @@ function MyNavbar() {
   const openMyProfile = () => {
     handleToggleOffcanvas();
     navigateTo(`/user`, { state: { userId: secureLocalStorage.getItem("userId") } });
+    // sessionStorage.setItem("selectedProfile", secureLocalStorage.getItem("userId"));
+    // navigateTo('/user');
   }
 
-  const openDashboard = () =>{
+  const openDashboard = () => {
     handleToggleOffcanvas();
     navigateTo(`/dashboard`);
   }
@@ -56,7 +58,7 @@ function MyNavbar() {
 
   return (
     <>
-      <Navbar className="navbar-dark bg-zinc-950 text-white">
+      <Navbar className="navbar-dark bg-zinc-950 text-white position-fixed top-0 w-100 z-10">
         <Container fluid>
           <Button variant="outline-light" onClick={handleToggleOffcanvas}>
             <FontAwesomeIcon icon={faBars} size='lg' />
@@ -90,7 +92,7 @@ function MyNavbar() {
                 </Nav.Link>
                 <hr className='bg-secondary w-100' />
                 {isAdminLoggedIn &&
-                  <Nav.Link href='/coc/admin/dashboard'>
+                  <Nav.Link href='/meeta/admin/dashboard'>
                     <FontAwesomeIcon icon={faClock} className="mr-2" />
                     Pending Post
                   </Nav.Link>

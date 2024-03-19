@@ -12,6 +12,7 @@ function GetPostLikers({ show, onHide, postId }) {
   const navigateTo = useNavigate();
 
   function navigateToUser(userId) {
+    // sessionStorage.getItem("selectedProfile")
     navigateTo("/user", { state: { userId: userId } })
   }
 
@@ -48,7 +49,7 @@ function GetPostLikers({ show, onHide, postId }) {
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
-        <h3>People who like this post</h3>
+        <h5>People who like this post</h5>
       </Modal.Header>
       <Modal.Body>
         {isLoading ? <LoadingSpinner /> :

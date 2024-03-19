@@ -11,7 +11,7 @@ import ViewImage from '../../modal/ViewImage';
 
 function UserProfile() {
   const location = useLocation();
-  const [userId, setUserId] = useState("");
+  // const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [userDetails, setUserDetails] = useState([]);
@@ -28,7 +28,7 @@ function UserProfile() {
     setIsLoading(true);
     try {
       const url = secureLocalStorage.getItem("url") + "user.php";
-
+      const userId = location.state.userId;
       const jsonData = {
         userId: userId,
       };
@@ -51,7 +51,7 @@ function UserProfile() {
     } finally {
       setIsLoading(false);
     }
-  }, [userId]);
+  }, [location.state.userId]);
 
   const getUserDetails = useCallback(async () => {
     setIsLoading(true);
@@ -83,15 +83,15 @@ function UserProfile() {
 
 
   useEffect(() => {
+    // setUserId(location.state.userId);
     getProfile();
     getUserDetails();
-    setUserId(location.state.userId);
     setIsUser(secureLocalStorage.getItem("userId") === location.state.userId);
     window.scrollTo(0, 0);
   }, [getProfile, getUserDetails, location.state.userId]);
 
   return (
-    <div className=' text-white w-full vh-100 mt-3'>
+    <div className=' text-white w-full vh-100 mt-16'>
       <Col className='text-center'>
         <Container className='flex justify-center'>
           <Image
@@ -118,7 +118,7 @@ function UserProfile() {
           </Col>
         </Container>
       }
-      <UpdateProfileModal show={showUpdateProfileModal} onHide={hideUpdatProfileeModal} userId={userId} />
+      <UpdateProfileModal show={showUpdateProfileModal} onHide={hideUpdatProfileeModal} userId={location.state.userId} />
       <ViewImage show={showViewImage} onHide={hideViewImage} fileName={userDetails.user_image} />
     </div>
   );

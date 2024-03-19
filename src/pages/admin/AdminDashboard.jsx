@@ -90,7 +90,7 @@ function AdminDashboard() {
   return (
     <div>
       {isLoading ? <LoadingSpinner /> :
-        <div className='flex justify-center'>
+        <div className='flex justify-center mt-16'>
           <div className='w-98 md:w-50'>
             {pendingPost.length > 0 ?
               <Container>

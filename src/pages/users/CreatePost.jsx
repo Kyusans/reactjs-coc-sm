@@ -1,7 +1,7 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Col, Container, Form, Modal, Row, Spinner } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import Webcam from 'react-webcam';
@@ -91,7 +91,7 @@ function CreatePost({ show, onHide }) {
           description: 'Wait for admin to approve your post',
         });
         setTimeout(() => {
-          window.location.reload();
+          handleOnHide();
         }, 1500);
       } else {
         toast.error("Something went wrong!");
@@ -145,7 +145,7 @@ function CreatePost({ show, onHide }) {
             <div className='w-full border-[1px] border-[#ffffff]' />
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
               <Form.Group className='mb-3 mt-4'>
-                <Form.Label>Title</Form.Label>
+                <Form.Label>Title*</Form.Label>
                 <Form.Control
                   className='bg-dark text-white'
                   type='text'
@@ -170,10 +170,9 @@ function CreatePost({ show, onHide }) {
                   (<Button onClick={handleUploadSwitch} variant='outline-light'>Take a picture</Button>) :
                   (<Button onClick={handleUploadSwitch} variant='outline-light'>Upload image </Button>)
                 }
-
               </Container>
               {isImageUpload &&
-                <Form.Group className='mb-4'>
+                <Form.Group className='mb-4 mt-3'>
                   <Form.Label>Image (Optional)</Form.Label>
                   <Form.Control
                     className='bg-dark text-white'
@@ -239,6 +238,7 @@ function CreatePost({ show, onHide }) {
                             <Button variant='outline-danger big-height w-50 mt-2' onClick={handleRetake}>
                               Retake
                             </Button>
+                            
                           </>
                         }
                       </>
@@ -247,6 +247,7 @@ function CreatePost({ show, onHide }) {
                         <Button variant='outline-success big-height w-50' onClick={capture}>
                           Capture Photo
                         </Button>
+                        <h6 className='text-secondary mt-2'> (Optional)</h6>
                       </div>
                     )}
                   </Row>
